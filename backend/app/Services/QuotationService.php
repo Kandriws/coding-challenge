@@ -38,6 +38,8 @@ class QuotationService
 
         $total = $this->calculateTotal($ages, $tripLength);
 
+        $pricingRules = $this->buildPricingRulesSnapshot($tripLength);
+
         return Quotation::create([
             'user_id' => $userId,
             'ages' => $data['age'],
@@ -45,6 +47,7 @@ class QuotationService
             'start_date' => $data['start_date'],
             'end_date' => $data['end_date'],
             'total' => $total,
+            'pricing_rules' => $pricingRules,
         ]);
     }
 
@@ -123,5 +126,15 @@ class QuotationService
         }
 
         return $parsedDate;
+    }
+
+    private function buildPricingRulesSnapshot(int $tripLength): array
+    {
+        return [
+            'fixed_rate' => self::FIXED_RATE,
+            'trip_length' => $tripLength,
+            'age_loads' => self::AGE_LOADS,
+            'generated_at' => Carbon::now()->toIsoString(),
+        ];
     }
 }
