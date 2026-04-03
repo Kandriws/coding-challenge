@@ -41,6 +41,11 @@ Available services:
 - MySQL: `localhost:3306`
 - Redis: `localhost:6379`
 
+API documentation:
+
+- Scramble UI: http://localhost:8080/docs/api
+- OpenAPI JSON: http://localhost:8080/docs/api.json
+
 To stop and remove containers:
 
 ```bash

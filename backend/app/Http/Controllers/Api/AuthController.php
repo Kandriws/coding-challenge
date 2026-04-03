@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use Dedoc\Scramble\Attributes\BodyParameter;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    /**
+     * @unauthenticated
+     */
+    #[BodyParameter('email', description: 'User email address.', type: 'string', format: 'email', required: true, example: 'test@example.com')]
+    #[BodyParameter('password', description: 'User password.', type: 'string', required: true, example: 'password')]
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
 
         try {
             if (! $token = JWTAuth::attempt($credentials)) {

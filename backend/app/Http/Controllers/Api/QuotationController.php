@@ -16,6 +16,17 @@ class QuotationController extends Controller
         private readonly QuotationService $quotationService,
     ) {}
 
+    /**
+     * @response \Illuminate\Http\JsonResponse<array{
+     *   success: true,
+     *   message: 'Quotation created successfully.',
+     *   data: array{
+     *     total: string,
+     *     currency_id: string,
+     *     quotation_id: int
+     *   }
+     * }, 201>
+     */
     public function store(StoreQuotationRequest $request)
     {
         try {
