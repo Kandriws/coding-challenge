@@ -8,6 +8,7 @@ use App\Http\Requests\StoreQuotationRequest;
 use App\Http\Resources\QuotationResource;
 use App\Services\QuotationService;
 use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Response;
 
 class QuotationController extends Controller
 {
@@ -26,10 +27,10 @@ class QuotationController extends Controller
             return $this->ok(
                 QuotationResource::make($quotation)->resolve(),
                 'Quotation created successfully.',
-                201,
+                Response::HTTP_CREATED,
             );
         } catch (InvalidArgumentException $e) {
-            return $this->fail($e->getMessage(), 422);
+            return $this->fail($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 }
