@@ -31,6 +31,7 @@ docker compose run --rm composer install
 cp backend/.env.example backend/.env
 docker compose run --rm artisan key:generate
 docker compose run --rm artisan migrate
+docker compose run --rm artisan db:seed
 ```
 
 Available services:
@@ -56,6 +57,7 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
+php artisan db:seed
 npm install
 npm run dev
 ```
@@ -67,6 +69,32 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## Demo credentials
+
+The seeded user for testing the login flow is:
+
+- Email: `test@example.com`
+- Password: `password`
+
+This user is created by `DatabaseSeeder`, so make sure you run `db:seed`.
+
+## API headers
+
+When testing the API, keep these headers in mind:
+
+- `Content-Type: application/json`
+- `Authorization: Bearer <JWT>` for protected routes such as `POST /api/v1/quotation`
+
+The login route `POST /api/v1/login` only needs `Content-Type: application/json`.
+
+## Debugging with Telescope
+
+Laravel Telescope is available locally and can help debug API requests and responses.
+
+- Telescope requests view: [http://localhost:8080/telescope/requests](http://localhost:8080/telescope/requests)
+
+You can use that page to inspect incoming requests, exceptions, queries and other useful debugging details while testing the API.
 
 ## Useful commands
 
