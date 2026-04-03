@@ -47,6 +47,19 @@ To stop and remove containers:
 docker compose down
 ```
 
+## API routes
+
+Base URL to test the API:
+
+```text
+http://localhost:8080
+```
+
+Available routes:
+
+- `POST /api/v1/login`
+- `POST /api/v1/quotation` (requires `Authorization: Bearer <token>`)
+
 ## Run locally without Docker
 
 ### Backend
