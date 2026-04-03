@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -18,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn () => null);
+        $middleware->redirectGuestsTo(fn() => null);
 
         $middleware->api(prepend: [
             EnforceJsonContentType::class,
@@ -26,19 +27,19 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*')
+            fn(Request $request) => $request->is('api/*')
         );
 
         $exceptions->render(function (AuthenticationException $e, Request $request) {
-            return api_fail('Unauthenticated.', 401);
+            return api_fail('Unauthenticated.', Response::HTTP_UNAUTHORIZED);
         });
 
         $exceptions->render(function (ValidationException $e, Request $request) {
-            return api_fail('Validation failed.', 422, $e->errors());
+            return api_fail('Validation failed.', Response::HTTP_UNPROCESSABLE_ENTITY, $e->errors());
         });
 
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            return api_fail('Resource not found.', 404);
+            return api_fail('Resource not found.', Response::HTTP_NOT_FOUND);
         });
 
         $exceptions->render(function (HttpException $e, Request $request) {
@@ -46,6 +47,6 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (Throwable $e, Request $request) {
-            return api_fail('An unexpected error occurred.', 500);
+            return api_fail('An unexpected error occurred.', Response::HTTP_INTERNAL_SERVER_ERROR);
         });
     })->create();
